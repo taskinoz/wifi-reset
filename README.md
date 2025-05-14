@@ -1,4 +1,4 @@
-<img src="./wifi_reset_icon.png" height="100" width="100" center/>
+<p align="center" style="text-align:center"><img src="./wifi_reset_icon.png" height="100" width="100" /></p>
 
 # WiFi Reset Utility (Windows)
 

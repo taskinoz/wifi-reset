@@ -1,3 +1,5 @@
+![logo](./wifi_reset_icon.png)
+
 # WiFi Reset Utility (Windows)
 
 A lightweight C++ tool that toggles your Wi-Fi adapter off and back on to quickly resolve connectivity issues after sleep/hibernate. Optionally shows a message box or plays a sound.

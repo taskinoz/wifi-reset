@@ -8,4 +8,4 @@ echo [*] Building executable...
 
 g++ main.cpp resource.res manifest.res -o wifi-reset.exe -mwindows
 
-echo [*] Done.
+echo [*] Done

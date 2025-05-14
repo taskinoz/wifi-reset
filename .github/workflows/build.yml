@@ -1,0 +1,67 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.cpp'
+      - '**.rc'
+      - '**.ico'
+      - '**.manifest'
+      - '**.bat'
+
+jobs:
+  build:
+    name: Build WiFi Reset
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up MinGW
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          version: '12.2.0'
+          platform: x64
+
+      - name: Compile resources
+        run: |
+          windres resource.rc -O coff -o resource.res
+          windres app.rc -O coff -o manifest.res
+
+      - name: Build executable
+        run: |
+          g++ main.cpp resource.res manifest.res -o wifi-reset.exe -mwindows
+
+      - name: Upload executable artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: wifi-reset
+          path: wifi-reset.exe
+
+  release:
+    name: Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: wifi-reset
+
+      - name: Get version (based on date/time)
+        id: version
+        run: echo "version=v$(date +'%Y.%m.%d-%H%M')" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: WiFi Reset ${{ steps.version.outputs.version }}
+          tag_name: ${{ steps.version.outputs.version }}
+          files: |
+            wifi-reset.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
